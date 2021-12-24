@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 /* TELE-OP CLASS*/
@@ -15,7 +16,7 @@ public class SRJT02 extends OpMode {
     private DcMotor flMotor; //front left motor
     private DcMotor frMotor; //front right motor
     private DcMotor blMotor; //back left motor
-    private DcMotor brMotor; //back right motor
+    private DcMotor brMotor; //back right motors
     private DcMotor liftMotor;
     private DcMotor intakeMotor;
 
@@ -33,7 +34,7 @@ public class SRJT02 extends OpMode {
         brMotor = hardwareMap.get(DcMotor.class, "brMotor");
 
         //Motors for intake
-        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
+//        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
 
 
@@ -49,7 +50,7 @@ public class SRJT02 extends OpMode {
         frMotor.setPower(0);
         blMotor.setPower(0);
         brMotor.setPower(0);
-        liftMotor.setPower(0);
+//        liftMotor.setPower(0);
         intakeMotor.setPower(0);
 
         // Update Telemetry
@@ -61,7 +62,7 @@ public class SRJT02 extends OpMode {
     public void loop() {
         drive();
         intakeLift();
-        telemetry.addData("position of lift", liftMotor.getCurrentPosition());
+//        telemetry.addData("position of lift", liftMotor.getCurrentPosition());
         telemetry.update();
     }
 
@@ -71,7 +72,7 @@ public class SRJT02 extends OpMode {
         frMotor.setPower(0);
         blMotor.setPower(0);
         brMotor.setPower(0);
-        liftMotor.setPower(.50);
+//        liftMotor.setPower(.50);
         // Update Telemetry
         telemetry.addData("Status", "Stopped");
         telemetry.update();
@@ -79,11 +80,11 @@ public class SRJT02 extends OpMode {
 
     public void drive() {
         flMotor.setDirection(DcMotor.Direction.FORWARD);
-        frMotor.setDirection(DcMotor.Direction.REVERSE);
+        frMotor.setDirection(DcMotor.Direction.FORWARD);
         blMotor.setDirection(DcMotor.Direction.FORWARD);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
         double xValue = gamepad1.right_stick_x * -rotationPower;
-        double yValue = gamepad1.left_stick_y * forwardPower;
+        double yValue = gamepad1.left_stick_y * -forwardPower;
         double rValue = (gamepad1.left_trigger - gamepad1.right_trigger);
 
         double flPower = yValue + xValue + rValue;
@@ -100,31 +101,31 @@ public class SRJT02 extends OpMode {
     }
 
     public void intakeLift() {
-        if (gamepad2.dpad_up) {
-            //liftMotor.setPower(0.50);
-            liftMotor.setTargetPosition(750 * 4);
-            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.75);
-        }
-        else if (gamepad2.dpad_left) {
-            liftMotor.setTargetPosition(750);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.75);
-        }
-        else if (gamepad2.dpad_right) {
-            liftMotor.setTargetPosition(750 * 3);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.75);
-        }
-
-        else if (gamepad2.dpad_down) {
-            liftMotor.setTargetPosition(0);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(-0.50);
-        }
-        else {
-            liftMotor.setPower(0);
-        }
+//        if (gamepad2.dpad_up) {
+////            liftMotor.setPower(0.50);
+////            liftMotor.setTargetPosition(750 * 4);
+////            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+////            liftMotor.setPower(0.75);
+//        }
+//        else if (gamepad2.dpad_left) {
+//            liftMotor.setTargetPosition(750);
+//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            liftMotor.setPower(0.75);
+//        }
+//        else if (gamepad2.dpad_right) {
+//            liftMotor.setTargetPosition(750 * 3);
+//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            liftMotor.setPower(0.75);
+//        }
+//
+//        else if (gamepad2.dpad_down) {
+//            liftMotor.setTargetPosition(0);
+//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            liftMotor.setPower(-0.50);
+//        }
+//        else {
+//            liftMotor.setPower(0);
+//        }
 
         if (gamepad2.right_bumper) {
             intakeMotor.setPower(-.50);
