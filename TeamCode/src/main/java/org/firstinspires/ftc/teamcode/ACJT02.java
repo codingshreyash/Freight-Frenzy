@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode; //Package class
 
 /* IMPORT CLASSES NEEDED FOR FTC*/
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 
 /* TELE-OP CLASS*/
 @TeleOp(name = "ACJT02", group = "Opmode")
+@Disabled
 public class ACJT02 extends OpMode {
 
     // MOTORS

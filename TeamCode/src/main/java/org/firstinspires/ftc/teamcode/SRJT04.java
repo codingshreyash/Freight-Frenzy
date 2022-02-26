@@ -17,10 +17,9 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
 /* TELE-OP CLASS*/
-@TeleOp(name = "SRJT02", group = "Opmode")
+@TeleOp(name = "SRJT04", group = "Opmode")
 @Disabled
-
-public class SRJT02 extends OpMode {
+public class SRJT04 extends OpMode {
 
     // MOTORS
     private DcMotor flMotor; //front left motor
@@ -37,10 +36,9 @@ public class SRJT02 extends OpMode {
     private Servo tiltServo;
 
     // SENSORS
-//    RevBlinkinLedDriver blinkinLedDriver;
-//    RevBlinkinLedDriver.BlinkinPattern pattern;
-//    private DigitalChannel redLED;
-//    private DigitalChannel greenLED;
+    private RevBlinkinLedDriver blinkinLedDriver;
+    private RevBlinkinLedDriver.BlinkinPattern pattern;
+
 
     // VARIABLES FOR DIRECTIONS
     private double forwardPower = 1;
@@ -68,15 +66,12 @@ public class SRJT02 extends OpMode {
         tiltServo = hardwareMap.get(Servo.class, "tiltServo");
 
         // sensors
-//        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-//        lightStrip();
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        lightStrip();
 
         // Update status
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tiltMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void start() {
@@ -86,7 +81,7 @@ public class SRJT02 extends OpMode {
         blMotor.setPower(0);
         brMotor.setPower(0);
         liftMotor.setPower(0);
-       // intakeMotor.setPower(0);
+        // intakeMotor.setPower(0);
         tiltMotor.setPower(0);
 
 
@@ -161,80 +156,74 @@ public class SRJT02 extends OpMode {
         tiltMotor.setDirection(DcMotor.Direction.FORWARD); //-185
         double tiltPower;
         double liftPower;
-        telemetry.addData("tilt motor current postion", tiltMotor.getCurrentPosition());
-        telemetry.addData("lift motor current postion", liftMotor.getCurrentPosition());
+        telemetry.addData("tilt motor current position", tiltMotor.getCurrentPosition());
+        telemetry.addData("lift motor current position", liftMotor.getCurrentPosition());
 
 
         //MOve up slightly
         //start
-            //tilt: 169
-            //lift: -324
+        //tilt: 169
+        //lift: -324
         // slightly up
-            //tilt: -45
-            //lift: -628
+        //tilt: -45
+        //lift: -628
         //Intake
-            // tilt:
-            // lift:
+        // tilt:
+        // lift:
         // extends to first
         //sec
         //third
-            // tilt: -394
-            // lift: 758
+        // tilt: -394
+        // lift: 758
 
         if (gamepad2.y)
         {
-            tiltServo.setPosition(0.3);
             liftPower = .80;
             tiltPower = .80;
             tiltMotor.setTargetPosition(-526);
             tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setTargetPosition(1065);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // tiltServo.setPosition(.25);
         }
 
         if (gamepad1.dpad_up)
         {
-            tiltServo.setPosition(.53);
             liftPower = .80;
-            liftMotor.setTargetPosition(-354);
+            liftMotor.setTargetPosition(-314);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(liftPower);
         }
 
         if (gamepad1.dpad_left)
         {
-            tiltServo.setPosition(0.35);
             tiltPower = .80;
-            tiltMotor.setTargetPosition(-140);
+            tiltMotor.setTargetPosition(-5);
             tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             tiltMotor.setPower(tiltPower);
+            tiltServo.setPosition(0.53);
         }
 
         if (gamepad1.dpad_down)
         {
-            tiltServo.setPosition(0.53);
-            tiltPower = .8;
-            tiltMotor.setTargetPosition(54);
-            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            liftPower = .80;
-//            liftMotor.setTargetPosition(-368);
-//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            liftMotor.setPower(liftPower);
+            liftPower = .80;
+            liftMotor.setTargetPosition(-122);
+            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(liftPower);
         }
 
         if (gamepad1.dpad_right)
         {
-
-            tiltServo.setPosition(0.53);
             tiltPower = .80;
             liftPower = .80;
-            tiltMotor.setTargetPosition(2);
+            tiltMotor.setTargetPosition(0);
             tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             tiltMotor.setPower(tiltPower);
 
-            liftMotor.setTargetPosition(-5);
+            liftMotor.setTargetPosition(0);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(liftPower);
+
         }
 
 
@@ -242,16 +231,19 @@ public class SRJT02 extends OpMode {
         if (gamepad2.dpad_up)
         {
             liftPower = .80;
-            liftMotor.setTargetPosition(-382);
+            liftMotor.setTargetPosition(-342);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(liftPower);
+
+            // tiltServo.setPosition(.25);
         }
 
         if (gamepad2.dpad_right) {
-            tiltPower = .40;
-            tiltMotor.setTargetPosition(-278);
+            tiltPower = .80;
+            tiltMotor.setTargetPosition(-272);
             tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             tiltMotor.setPower(tiltPower);
+            tiltServo.setPosition(0.25);
         }
 
 
@@ -270,19 +262,19 @@ public class SRJT02 extends OpMode {
         }
 
         else if (gamepad2.dpad_down) {
-            tiltServo.setPosition(0.85); //dropping
+            tiltServo.setPosition(0.75); //dropping
         }
 
     }
 
-//    public void lightStrip() {
-//        pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
-//        blinkinLedDriver.setPattern(pattern);
-//        if (gamepad1.dpad_up) {
-//            pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-//            blinkinLedDriver.setPattern(pattern);
-//        }
-//    }
+    public void lightStrip() {
+        pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+        blinkinLedDriver.setPattern(pattern);
+        if (gamepad1.dpad_up) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+            blinkinLedDriver.setPattern(pattern);
+        }
+    }
 
     public void carouselSpinner() {
         // 1a - 0; 1b - 1; carouselSpinner
@@ -296,9 +288,5 @@ public class SRJT02 extends OpMode {
             carouselRight.setPower(-1.0);
             carouselLeft.setPower(-1.0);
         }
-    }
-
-    public DcMotor getBlMotor() {
-        return blMotor;
     }
 } //End Brace

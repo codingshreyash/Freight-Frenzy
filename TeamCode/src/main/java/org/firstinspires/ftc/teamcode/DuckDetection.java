@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -19,13 +20,15 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Point;
 
+@TeleOp(name="Concept: EOCV", group="Concept")
 
 public class DuckDetection extends LinearOpMode {
     OpenCvWebcam webcam;
     Telemetry telemetry;
 
     @Override
-    public void runOpMode(){
+
+    public void runOpMode (){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
 
@@ -43,12 +46,15 @@ public class DuckDetection extends LinearOpMode {
             public void onError(int errorCode) {
                 System.exit(0);
             }
-        });
 
+        });
+        waitForStart();
     }
+
 
     static class DuckDetectionPipeline extends OpenCvPipeline
     {
+
         Telemetry telemetry;
         Mat mat = new Mat();
 
@@ -119,16 +125,16 @@ public class DuckDetection extends LinearOpMode {
 
             if( rightBool ) {
                 barcodePosition = BarcodePosition.RIGHT;
-                telemetry.addData( "Location", type + " right" );
+               // telemetry.addData( "Location", type + " right" );
             } else if( leftBool ) {
                 barcodePosition = BarcodePosition.LEFT;
-                telemetry.addData( "Location", type + " left" );
+              //  telemetry.addData( "Location", type + " left" );
             } else if( middleBool ) {
                 barcodePosition = BarcodePosition.MIDDLE;
-                telemetry.addData( "Location", type + " middle" );
+              //  telemetry.addData( "Location", type + " middle" );
             } else {
                 barcodePosition = BarcodePosition.NOT_FOUND;
-                telemetry.addData( "Location", type + " not found" );
+              //  telemetry.addData( "Location", type + " not found" );
             }
             Imgproc.cvtColor( mat, mat, Imgproc.COLOR_GRAY2RGB );
 
@@ -149,9 +155,9 @@ public class DuckDetection extends LinearOpMode {
             double eleValue = Core.sumElems( elementImage ).val[0] / (elementImage.rows( ) * elementImage.cols( )) / 255;
             //double duckValue = Core.sumElems( duckImage ).val[0] / (duckImage.rows( ) * duckImage.cols( )) / 255;
             double customValue = Core.sumElems( customImage ).val[0] / (customImage.rows( ) * customImage.cols( )) / 255;
-            telemetry.update( );
-            if( eleValue < duckValue )
-                return duckImage;
+            //telemetry.update();
+            if( eleValue < customValue )
+                return customImage;
             return elementImage;
         }
 

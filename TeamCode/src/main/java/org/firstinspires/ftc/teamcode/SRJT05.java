@@ -17,10 +17,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
 /* TELE-OP CLASS*/
-@TeleOp(name = "SRJT02", group = "Opmode")
-@Disabled
-
-public class SRJT02 extends OpMode {
+@TeleOp(name = "SRJT05", group = "Opmode")
+public class SRJT05 extends OpMode {
 
     // MOTORS
     private DcMotor flMotor; //front left motor
@@ -35,6 +33,7 @@ public class SRJT02 extends OpMode {
     private CRServo carouselRight;
     private CRServo carouselLeft;
     private Servo tiltServo;
+    private Servo dropServo;
 
     // SENSORS
 //    RevBlinkinLedDriver blinkinLedDriver;
@@ -47,6 +46,7 @@ public class SRJT02 extends OpMode {
     private double rotationPower = 1;
 
     liftPIDController liftPIDController;
+
 
     @Override
     public void init() {
@@ -66,6 +66,7 @@ public class SRJT02 extends OpMode {
         carouselRight = hardwareMap.get(CRServo.class, "carouselRight");
         carouselLeft = hardwareMap.get(CRServo.class, "carouselLeft");
         tiltServo = hardwareMap.get(Servo.class, "tiltServo");
+        dropServo = hardwareMap.get(Servo.class, "dropServo");
 
         // sensors
 //        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
@@ -86,7 +87,7 @@ public class SRJT02 extends OpMode {
         blMotor.setPower(0);
         brMotor.setPower(0);
         liftMotor.setPower(0);
-       // intakeMotor.setPower(0);
+        // intakeMotor.setPower(0);
         tiltMotor.setPower(0);
 
 
@@ -102,6 +103,7 @@ public class SRJT02 extends OpMode {
         carouselSpinner();
         telemetry.addData("position of lift", liftMotor.getCurrentPosition());
         telemetry.addData("servo position", tiltServo.getPosition());
+        telemetry.addData("intake tick", intakeMotor.getCurrentPosition());
         telemetry.update();
     }
 
@@ -115,19 +117,7 @@ public class SRJT02 extends OpMode {
         tiltMotor.setPower(0);
     }
 
-    public void tiltToPosition(double tiltTargetPosition , double movementSpeed) {
-        double startTime = 0;
-        double stopState = 0;
-        while(stopState < 500){
-            double power = liftPIDController.getOutput(liftMotor.getCurrentPosition() , tiltTargetPosition);
-            tiltMotor.setPower(power);
-            if(Math.abs(liftPIDController.getError()) < 2){
-                stopState = System.currentTimeMillis() - startTime;
-            }else{
-                startTime = System.currentTimeMillis();
-            }
-        }
-    }
+
 
 
 
@@ -142,7 +132,7 @@ public class SRJT02 extends OpMode {
         brMotor.setDirection(DcMotor.Direction.FORWARD);
         double xValue = gamepad1.right_stick_x * rotationPower;
         double yValue = gamepad1.left_stick_y * -forwardPower;
-        double rValue = (gamepad1.left_trigger - gamepad1.right_trigger);
+        double rValue = (gamepad1.right_trigger - gamepad1.left_trigger);
 
         double flPower = yValue + xValue + rValue;
         double frPower = yValue - xValue - rValue;
@@ -157,148 +147,87 @@ public class SRJT02 extends OpMode {
         brMotor.setPower(Range.clip(Math.signum(brPower) * Math.pow(brPower, 2), -1.0, 1.0));
     }
 
-    public void intakeLift()  {
+    public void intakeLift()  { //intakeMethod
         tiltMotor.setDirection(DcMotor.Direction.FORWARD); //-185
         double tiltPower;
         double liftPower;
         telemetry.addData("tilt motor current postion", tiltMotor.getCurrentPosition());
         telemetry.addData("lift motor current postion", liftMotor.getCurrentPosition());
+        telemetry.addData("tilt Servo current postion", tiltServo.getPosition());
 
+        //lifting
 
-        //MOve up slightly
-        //start
-            //tilt: 169
-            //lift: -324
-        // slightly up
-            //tilt: -45
-            //lift: -628
-        //Intake
-            // tilt:
-            // lift:
-        // extends to first
-        //sec
-        //third
-            // tilt: -394
-            // lift: 758
+        if(gamepad2.x) {
 
-        if (gamepad2.y)
-        {
-            tiltServo.setPosition(0.3);
-            liftPower = .80;
-            tiltPower = .80;
-            tiltMotor.setTargetPosition(-526);
-            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setTargetPosition(1065);
+            dropServo.setPosition(1);
+            liftMotor.setTargetPosition(-7);
+            liftMotor.setPower(0.4);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
         }
 
-        if (gamepad1.dpad_up)
-        {
-            tiltServo.setPosition(.53);
-            liftPower = .80;
-            liftMotor.setTargetPosition(-354);
+        if(gamepad2.b) {
+            tiltServo.setPosition(.66);
+            tiltMotor.setTargetPosition(7);
+            tiltMotor.setPower(.35);
+            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dropServo.setPosition(1);
+        }
+
+        if(gamepad2.a){
+            tiltMotor.setTargetPosition(-216);
+            tiltMotor.setPower(.7);
+            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            liftMotor.setTargetPosition(-7);
+            liftMotor.setPower(0.6);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(liftPower);
+
+            tiltServo.setPosition(.25);
+            dropServo.setPosition(1);
         }
 
-        if (gamepad1.dpad_left)
-        {
-            tiltServo.setPosition(0.35);
-            tiltPower = .80;
-            tiltMotor.setTargetPosition(-140);
+        if(gamepad2.y){
+            tiltMotor.setTargetPosition(-487);
+            tiltMotor.setPower(.7);
             tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            tiltMotor.setPower(tiltPower);
-        }
 
-        if (gamepad1.dpad_down)
-        {
-            tiltServo.setPosition(0.53);
-            tiltPower = .8;
-            tiltMotor.setTargetPosition(54);
-            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            liftPower = .80;
-//            liftMotor.setTargetPosition(-368);
-//            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            liftMotor.setPower(liftPower);
-        }
-
-        if (gamepad1.dpad_right)
-        {
-
-            tiltServo.setPosition(0.53);
-            tiltPower = .80;
-            liftPower = .80;
-            tiltMotor.setTargetPosition(2);
-            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            tiltMotor.setPower(tiltPower);
-
-            liftMotor.setTargetPosition(-5);
+            liftMotor.setTargetPosition(1247);
+            liftMotor.setPower(0.40);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(liftPower);
+
+            tiltServo.setPosition(.20);
+            dropServo.setPosition(1);
+        }
+
+        if (gamepad2.dpad_down) {
+            dropServo.setPosition(0);
         }
 
 
 
-        if (gamepad2.dpad_up)
-        {
-            liftPower = .80;
-            liftMotor.setTargetPosition(-382);
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(liftPower);
-        }
-
-        if (gamepad2.dpad_right) {
-            tiltPower = .40;
-            tiltMotor.setTargetPosition(-278);
-            tiltMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            tiltMotor.setPower(tiltPower);
-        }
 
 
         //INTAKE
         if (gamepad2.right_bumper) {
             intakeMotor.setPower(-.75);
+
         }
 
         if (gamepad2.left_bumper) {
             intakeMotor.setPower(0);
         }
 
-        //TILT SERVO:
-        if (gamepad2.dpad_left) {
-            tiltServo.setPosition(0.25); // moving out
-        }
-
-        else if (gamepad2.dpad_down) {
-            tiltServo.setPosition(0.85); //dropping
-        }
 
     }
-
-//    public void lightStrip() {
-//        pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
-//        blinkinLedDriver.setPattern(pattern);
-//        if (gamepad1.dpad_up) {
-//            pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-//            blinkinLedDriver.setPattern(pattern);
-//        }
-//    }
 
     public void carouselSpinner() {
         // 1a - 0; 1b - 1; carouselSpinner
         if (gamepad1.a) {
-            carouselRight.setPower(0.0);
             carouselLeft.setPower(0.0);
-        } else if (gamepad1.b) {
-            carouselRight.setPower(1.0);
-            carouselLeft.setPower(1.0);
         } else if (gamepad1.x) {
-            carouselRight.setPower(-1.0);
-            carouselLeft.setPower(-1.0);
+            carouselLeft.setPower(1.0);
         }
-    }
-
-    public DcMotor getBlMotor() {
-        return blMotor;
     }
 } //End Brace

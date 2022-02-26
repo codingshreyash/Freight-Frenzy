@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 
 /* TELE-OP CLASS*/
 @TeleOp(name = "ACJT01", group = "Opmode")
+@Disabled
 public class ACJT01 extends OpMode {
 
     // MOTORS
